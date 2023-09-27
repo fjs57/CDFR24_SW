@@ -1,0 +1,4 @@
+uint32 status_vector
+string status_string
+uint32 watchdog_status
+uint64 last_message_timestamp

@@ -1,0 +1,22 @@
+cmake_minimum_required(VERSION 3.8)
+project(hw_support_pkg)
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(hw_support_interfaces_pkg REQUIRED)
+
+include_directories(include/hw_support_pkg)
+
+add_executable(can_support_node src/CAN_support.cpp)
+ament_target_dependencies(can_support_node rclcpp hw_support_interfaces_pkg)
+
+install(TARGETS
+  can_support_node
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+ament_package()
