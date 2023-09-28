@@ -55,6 +55,8 @@ CanSupportNode::CanSupportNode() : Node("CAN_support")
         )
     );
 
+    init_can();
+
     RCLCPP_INFO(this->get_logger(), "CAN Support Node started");
 }
 

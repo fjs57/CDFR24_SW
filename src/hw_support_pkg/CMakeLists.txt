@@ -14,6 +14,11 @@ include_directories(include/hw_support_pkg)
 add_executable(can_support_node src/CAN_support.cpp)
 ament_target_dependencies(can_support_node rclcpp hw_support_interfaces_pkg)
 
+install(DIRECTORY
+  launch
+  DESTINATION share/${PROJECT_NAME}
+)
+
 install(TARGETS
   can_support_node
   DESTINATION lib/${PROJECT_NAME}
