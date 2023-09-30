@@ -10,7 +10,7 @@
 class GenericBoardNode : public rclcpp::Node
 {
 public :
-    GenericBoardNode();
+    GenericBoardNode(const char* name);
     ~GenericBoardNode();
 
 private :

@@ -19,18 +19,30 @@ def generate_launch_description():
 	    arguments=['--ros-args', '--log-level', 'info']
     )
 
-    generic_board_node = Node(
+    # generic_board_node = Node(
+    #     package="hw_support_pkg",
+    #     executable="generic_board_node",
+    #     parameters=[
+    #         {"board_bus_id"         : 5         },
+    #         {"service_length"       : 6         },
+    #         {"watchdog_timeout"     : 2000      }
+    #     ],
+	#     arguments=['--ros-args', '--log-level', 'info']
+    # )
+
+    actuator_board_node = Node(
         package="hw_support_pkg",
-        executable="generic_board_node",
+        executable="actuator_board_node",
         parameters=[
             {"board_bus_id"         : 5         },
             {"service_length"       : 6         },
             {"watchdog_timeout"     : 2000      }
         ],
-	    arguments=['--ros-args', '--log-level', 'info']
+	    arguments=['--ros-args', '--log-level', 'debug']
     )
 
     ld.add_action(can_support_node)
-    ld.add_action(generic_board_node)
+    # ld.add_action(generic_board_node)
+    ld.add_action(actuator_board_node)
 
     return ld

@@ -14,8 +14,12 @@ include_directories(include/hw_support_pkg)
 add_executable(can_support_node src/CAN_support.cpp)
 ament_target_dependencies(can_support_node rclcpp hw_support_interfaces_pkg)
 
-add_executable(generic_board_node src/GenericBoard.cpp)
-ament_target_dependencies(generic_board_node rclcpp hw_support_interfaces_pkg)
+# add_executable(generic_board_node src/GenericBoard.cpp)
+# ament_target_dependencies(generic_board_node rclcpp hw_support_interfaces_pkg)
+
+
+add_executable(actuator_board_node src/ActuatorBoard.cpp src/GenericBoard.cpp)
+ament_target_dependencies(actuator_board_node rclcpp hw_support_interfaces_pkg)
 
 install(DIRECTORY
   launch
@@ -24,7 +28,8 @@ install(DIRECTORY
 
 install(TARGETS
   can_support_node
-  generic_board_node
+  # generic_board_node
+  actuator_board_node
   DESTINATION lib/${PROJECT_NAME}
 )
 

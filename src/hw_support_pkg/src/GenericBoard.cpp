@@ -1,5 +1,6 @@
 #include "GenericBoard.hpp"
 
+
 #define GENERIC_BOARD_STATUS_PUBLISH_INTERVAL 500
 
 /**
@@ -8,22 +9,22 @@
  * 
  * Initialize the interfaces and the 
  */
-GenericBoardNode::GenericBoardNode() : Node("Generic_Board")
+GenericBoardNode::GenericBoardNode(const char* name) : Node(name)
 {
     RCLCPP_INFO(this->get_logger(), "Node starting");
 
     // parameters
-    this->declare_parameter("board_bus_id",            rclcpp::PARAMETER_INTEGER   );
-    this->declare_parameter("service_length",          rclcpp::PARAMETER_INTEGER   );
-    this->declare_parameter("watchdog_timeout",        rclcpp::PARAMETER_INTEGER   );
+    this->declare_parameter("board_bus_id",     rclcpp::PARAMETER_INTEGER );
+    this->declare_parameter("service_length",   rclcpp::PARAMETER_INTEGER );
+    this->declare_parameter("watchdog_timeout", rclcpp::PARAMETER_INTEGER );
 
-    board_bus_id                    = (uint32_t)(   this->get_parameter("board_bus_id")         .as_int()       );
-    service_length                  = (uint32_t)(   this->get_parameter("service_length")       .as_int()       );
-    watchdog_timeout                = (uint32_t)(   this->get_parameter("watchdog_timeout")     .as_int()       );
+    board_bus_id      = (uint32_t)( this->get_parameter("board_bus_id")     .as_int() );
+    service_length    = (uint32_t)( this->get_parameter("service_length")   .as_int() );
+    watchdog_timeout  = (uint32_t)( this->get_parameter("watchdog_timeout") .as_int() );
 
-    RCLCPP_INFO(this->get_logger(), "board_bus_id           : %d",      board_bus_id                    );
-    RCLCPP_INFO(this->get_logger(), "service_length         : %d",      service_length                  );
-    RCLCPP_INFO(this->get_logger(), "watchdog_timeout       : %d ms",   watchdog_timeout                );
+    RCLCPP_INFO(this->get_logger(), "board_bus_id           : %d",      board_bus_id     );
+    RCLCPP_INFO(this->get_logger(), "service_length         : %d",      service_length   );
+    RCLCPP_INFO(this->get_logger(), "watchdog_timeout       : %d ms",   watchdog_timeout );
 
     // initialize the CAN message filters from the parameters
     init_filter();
@@ -182,14 +183,14 @@ void GenericBoardNode::callback_publish_status(void)
 }
 
 
-int main(int argc, char **argv)
-{
-    rclcpp::init(argc, argv);
+// int main(int argc, char **argv)
+// {
+//     rclcpp::init(argc, argv);
 
-    auto node = std::make_shared<GenericBoardNode>();
+//     auto node = std::make_shared<GenericBoardNode>("Generic_Board");
 
-    rclcpp::spin(node);
-    rclcpp::shutdown();
+//     rclcpp::spin(node);
+//     rclcpp::shutdown();
 
-    return 0;
-}
+//     return 0;
+// }
