@@ -27,7 +27,7 @@ def generate_launch_description():
             {"service_length"       : 6         },
             {"watchdog_timeout"     : 2000      }
         ],
-	    arguments=['--ros-args', '--log-level', 'debug']
+	    arguments=['--ros-args', '--log-level', 'info']
     )
 
     ld.add_action(can_support_node)
