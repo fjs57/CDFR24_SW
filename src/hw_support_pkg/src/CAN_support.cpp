@@ -14,7 +14,7 @@
  */
 CanSupportNode::CanSupportNode() : Node("CAN_support")
 {
-    RCLCPP_INFO(this->get_logger(), "CAN Support Node starting");
+    RCLCPP_INFO(this->get_logger(), "Node starting");
 
     // parameters
     this->declare_parameter("interface_file",       rclcpp::PARAMETER_STRING    );
@@ -55,15 +55,22 @@ CanSupportNode::CanSupportNode() : Node("CAN_support")
         )
     );
 
-    init_can();
+    if(init_can())
+    {
+        start_receiving_thread();
+    }
+    else
+    {
+        
+    }
 
-    RCLCPP_INFO(this->get_logger(), "CAN Support Node started");
+    RCLCPP_INFO(this->get_logger(), "Node started");
 }
 
 CanSupportNode::~CanSupportNode()
 {
     deinit_can();
-    RCLCPP_INFO(this->get_logger(), "CAN Support Node cleanly destroyed");
+    RCLCPP_INFO(this->get_logger(), "Node cleanly destroyed");
 }
 
 void CanSupportNode::callback_can_frame_sender_server(
@@ -74,15 +81,27 @@ void CanSupportNode::callback_can_frame_sender_server(
     struct can_frame frame;
     uint8_t data_iterator;
 
+    char buf[64];
+    uint16_t len_buf = 0;
+
+    len_buf = sprintf(buf, "Received request to send id=%03x len=%d, data=[", request->can_frame.id, request->can_frame.length);
+
     frame.can_id = request->can_frame.id;
     frame.can_dlc = request->can_frame.length;
 
-    for(data_iterator=0;data_iterator<=request->can_frame.length;data_iterator++)
+    for(data_iterator=0;data_iterator<request->can_frame.length;data_iterator++)
     {
         frame.data[data_iterator] = request->can_frame.data[data_iterator];
+    
+        if(data_iterator!=0) len_buf += sprintf(&(buf[len_buf]), ", ");
+        len_buf += sprintf(&(buf[len_buf]), "%02x", frame.data[data_iterator]);
     }
 
     response->status = send(frame);
+
+    len_buf += sprintf(&(buf[len_buf]), "] sent?=%d", response->status);
+
+    RCLCPP_ERROR(this->get_logger(), "%s", buf );
 }
 
 bool CanSupportNode::init_can(void)
@@ -234,16 +253,11 @@ void CanSupportNode::stop_receiving_thread(void)
 
 void CanSupportNode::on_receive(struct can_frame* incomming)
 {
-    hw_support_interfaces_pkg::msg::CanFrame to_publish;
-    uint8_t data_iterator;
+    auto to_publish = hw_support_interfaces_pkg::msg::CanFrame();
 
     to_publish.id = incomming->can_id;
     to_publish.length = incomming->can_dlc;
-
-    for(data_iterator=0;data_iterator<=incomming->can_dlc;data_iterator++)
-    {
-        to_publish.data[data_iterator] = incomming->data[data_iterator];
-    }
+    to_publish.data = std::vector<uint8_t>(incomming->data, incomming->data + incomming->can_dlc);
 
     can_frame_receiver_publisher_->publish(to_publish);
 }
