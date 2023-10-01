@@ -79,29 +79,17 @@ void CanSupportNode::callback_can_frame_sender_server(
 )
 {
     struct can_frame frame;
-    uint8_t data_iterator;
 
-    char buf[64];
-    uint16_t len_buf = 0;
-
-    len_buf = sprintf(buf, "Received request to send id=%03x len=%d, data=[", request->can_frame.id, request->can_frame.length);
+    RCLCPP_DEBUG(this->get_logger(),"Received request to send id=%03x len=%d", request->can_frame.id, request->can_frame.length);
 
     frame.can_id = request->can_frame.id;
     frame.can_dlc = request->can_frame.length;
-
-    for(data_iterator=0;data_iterator<request->can_frame.length;data_iterator++)
-    {
-        frame.data[data_iterator] = request->can_frame.data[data_iterator];
     
-        if(data_iterator!=0) len_buf += sprintf(&(buf[len_buf]), ", ");
-        len_buf += sprintf(&(buf[len_buf]), "%02x", frame.data[data_iterator]);
-    }
+    std::copy(request->can_frame.data.begin(), request->can_frame.data.end(), frame.data);
 
     response->status = send(frame);
 
-    len_buf += sprintf(&(buf[len_buf]), "] sent?=%d", response->status);
-
-    RCLCPP_ERROR(this->get_logger(), "%s", buf );
+    RCLCPP_DEBUG(this->get_logger(),"sent ? : %d", response->status);
 }
 
 bool CanSupportNode::init_can(void)

@@ -12,8 +12,11 @@ find_package(rosidl_default_generators REQUIRED)
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/BoardStatus.msg"
   "msg/CanFrame.msg"
+  "msg/MotorsState.msg"
   "msg/ScreenAction.msg"
+  
   "srv/CanFrame.srv"
+  "srv/MotorsSettings.srv"
   "srv/ResetBoard.srv"
   "srv/ServoGoto.srv"
 )

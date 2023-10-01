@@ -1,0 +1,8 @@
+bool    left_enable
+int32   left_set_speed
+uint32  left_set_acc
+bool    right_enable
+int32   right_set_speed
+uint32  right_set_acc
+---
+bool status

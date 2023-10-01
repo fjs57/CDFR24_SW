@@ -126,12 +126,23 @@ uint32_t GenericBoardNode::get_service_id(const hw_support_interfaces_pkg::msg::
     return frame->id & ~address_mask;
 }
 
+uint32_t GenericBoardNode::construct_id(uint32_t service)
+{
+    uint32_t to_ret;
+
+    to_ret  = service & ~address_mask;
+    to_ret |= address_filter;
+
+    return to_ret;
+}
+
 void GenericBoardNode::on_frame_received(uint32_t service, uint32_t length, std::vector<uint8_t> data)
 {
     (void)length; // UNUSED
     (void)data; // UNUSED
+    (void)service; // UNUSED
 
-    RCLCPP_DEBUG(this->get_logger(), "Message received, service=%02d", service);
+    RCLCPP_DEBUG(this->get_logger(), "on_frame_received function is not surcharged!");
 }
 
 void GenericBoardNode::watchdog_init(void)
@@ -182,6 +193,75 @@ void GenericBoardNode::callback_publish_status(void)
     board_status_publisher_->publish(msg);
 }
 
+void GenericBoardNode::set_status_vector(uint32_t value)
+{
+    status_vector = value;
+}
+
+bool GenericBoardNode::send_frame(uint32_t service, std::vector<uint8_t> data)
+{
+
+    RCLCPP_INFO(this->get_logger(), "enter sending frame");
+
+    auto client = this->create_client<hw_support_interfaces_pkg::srv::CanFrame>("send_frame");
+
+    RCLCPP_INFO(this->get_logger(), "client created");
+
+    while(!client->wait_for_service(std::chrono::seconds(1))) // waits for the service to be up
+    {
+        if (!rclcpp::ok()) {
+            RCLCPP_ERROR(this->get_logger(), "Interrupted while waiting for the service. Exiting.");
+            return 0;
+        }
+        RCLCPP_INFO(this->get_logger(), "waiting for sender service to be up");
+    }
+
+    RCLCPP_INFO(this->get_logger(), "service up");
+
+    auto request = std::make_shared<hw_support_interfaces_pkg::srv::CanFrame::Request>();
+
+    request->can_frame.id = construct_id(service);
+    // request->can_frame.length = data.size();
+    // request->can_frame.data = data;
+
+    request->can_frame.length = 0;
+    // request->can_frame.data = data; 
+    (void)data;
+
+    RCLCPP_INFO(this->get_logger(),
+        "request creation for id:%x len:%d",
+        request->can_frame.id,
+        request->can_frame.length
+    );
+
+    auto future = client->async_send_request(request);
+
+    // auto response = future.get();
+
+    return true;
+
+    // auto future = client->async_send_request(request);
+
+    // RCLCPP_INFO(this->get_logger(), "request created");
+
+    // try
+    // {
+    //     auto response = future.get();
+
+    //     if ( response->status )
+    //     {
+    //         RCLCPP_DEBUG(this->get_logger(), "frame sent");
+    //         return true;
+    //     }
+    //     RCLCPP_WARN(this->get_logger(), "frame sending failed");
+    // }
+    // catch (const std::exception &e)
+    // {
+    //     RCLCPP_ERROR(this->get_logger(), "Service call failed");
+    // }
+
+    // return false;
+}
 
 // int main(int argc, char **argv)
 // {

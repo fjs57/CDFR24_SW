@@ -13,6 +13,10 @@ public :
     GenericBoardNode(const char* name);
     ~GenericBoardNode();
 
+    void set_status_vector(uint32_t value);
+
+    bool send_frame(uint32_t service, std::vector<uint8_t> data);
+
 private :
 
     // parameters
@@ -48,6 +52,8 @@ private :
     void init_filter(void);
     bool filter_frame(const hw_support_interfaces_pkg::msg::CanFrame::SharedPtr frame);
     uint32_t get_service_id(const hw_support_interfaces_pkg::msg::CanFrame::SharedPtr frame);
+
+    uint32_t construct_id(uint32_t service);
 
     virtual void on_frame_received(uint32_t service, uint32_t length, std::vector<uint8_t> data);
 
