@@ -157,7 +157,7 @@ void GenericBoardNode::watchdog_update(void)
     watchdog_timer_cancel();
     watchdog_timer_set();
     watchdog_state = 0;
-    RCLCPP_INFO(this->get_logger(), "watchdog updated");
+    RCLCPP_DEBUG(this->get_logger(), "watchdog updated");
 }
 
 void GenericBoardNode::watchdog_timer_cancel(void)
@@ -193,7 +193,7 @@ void GenericBoardNode::callback_publish_status(void)
     board_status_publisher_->publish(msg);
 }
 
-void GenericBoardNode::set_status_vector(uint32_t value)
+void GenericBoardNode::set_status_vector(uint64_t value)
 {
     status_vector = value;
 }

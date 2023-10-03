@@ -24,6 +24,9 @@ ament_target_dependencies(actuator_board_node rclcpp hw_support_interfaces_pkg)
 add_executable(motor_board_node src/MotorBoard.cpp src/GenericBoard.cpp)
 ament_target_dependencies(motor_board_node rclcpp hw_support_interfaces_pkg)
 
+add_executable(distribution_board_node src/DistributionBoard.cpp src/GenericBoard.cpp)
+ament_target_dependencies(distribution_board_node rclcpp hw_support_interfaces_pkg)
+
 install(DIRECTORY
   launch
   DESTINATION share/${PROJECT_NAME}
@@ -34,6 +37,7 @@ install(TARGETS
   # generic_board_node
   actuator_board_node
   motor_board_node
+  distribution_board_node
   DESTINATION lib/${PROJECT_NAME}
 )
 

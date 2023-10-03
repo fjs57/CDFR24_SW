@@ -13,7 +13,7 @@ public :
     GenericBoardNode(const char* name);
     ~GenericBoardNode();
 
-    void set_status_vector(uint32_t value);
+    void set_status_vector(uint64_t value);
 
     bool send_frame(uint32_t service, std::vector<uint8_t> data);
 
@@ -32,7 +32,7 @@ private :
     uint32_t watchdog_state;
     rclcpp::TimerBase::SharedPtr watchdog_timer_;
 
-    uint32_t status_vector;
+    uint64_t status_vector;
     std::string status_string;
     rclcpp::TimerBase::SharedPtr status_publish_timer_;
 
