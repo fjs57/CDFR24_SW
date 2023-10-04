@@ -19,6 +19,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   
   "srv/CanFrame.srv"
   "srv/MotorsSettings.srv"
+  "srv/RelayChangeState.srv"
   "srv/ResetBoard.srv"
   "srv/ServoGoto.srv"
 )

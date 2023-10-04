@@ -26,6 +26,19 @@ DistributionBoardNode::DistributionBoardNode() : GenericBoardNode("Distribution_
     voltages_offsets = this->get_parameter("voltages_offsets").as_double_array();
     current_offsets  = this->get_parameter("current_offsets" ).as_double_array();
     encoder_ppr      = this->get_parameter("encoder_ppr"     ).as_int();
+
+    telemetry_publisher_    = this->create_publisher<hw_support_interfaces_pkg::msg::DistributionTelemetry>("distribution_telemetry", 2);
+    encoders_publisher_     = this->create_publisher<hw_support_interfaces_pkg::msg::EncodersPosition>("encoders_position", 2);
+
+    relay_change_state_service_ = this->create_service<hw_support_interfaces_pkg::srv::RelayChangeState>(
+        "relay_change_state",
+        std::bind(
+            &DistributionBoardNode::callback_relay_change_state,
+            this,
+            std::placeholders::_1,
+            std::placeholders::_2
+        )
+    );
 }
 
 DistributionBoardNode::~DistributionBoardNode()
@@ -144,7 +157,6 @@ void DistributionBoardNode::decode_status(std::vector<uint8_t> data)
         safety_union.fields.relay,
         safety_union.fields.forcing
     );
-
     // TODO : complete the status decoding to extract data from the vector
 }
 
@@ -152,6 +164,7 @@ void DistributionBoardNode::decode_epo_state(std::vector<uint8_t> data)
 {
     safety_union.fields.relay = data[0] & 0x01;
     RCLCPP_DEBUG(this->get_logger(), "relay state : %d", safety_union.fields.relay);
+    telemetry_publish();
 }
 
 void DistributionBoardNode::decode_cells(std::vector<uint8_t> data)
@@ -204,6 +217,7 @@ void DistributionBoardNode::decode_encoders(std::vector<uint8_t> data)
     uint8_t it;
     uint16_t tmp;
     uint32_t* encoder[] = {&left_encoder, &right_encoder};
+
     for(it=0;it<DISTRIBUTION_BOARD_BUS_COUNT;it++)
     {
         tmp = (uint16_t)(data[2*it]) & 0x00FF;
@@ -211,8 +225,87 @@ void DistributionBoardNode::decode_encoders(std::vector<uint8_t> data)
         *encoder[it] = (uint32_t)tmp;
     }
     RCLCPP_DEBUG(this->get_logger(), "encoders : [%d,%d]", left_encoder, right_encoder);
+
+    encoders_compute(left_encoder, &last_left, &left_delta, &left_continuous);
+    encoders_compute(right_encoder, &last_right, &right_delta, &right_continuous);
+    encoders_publish();
 }
 
+void DistributionBoardNode::encoders_compute(
+    uint32_t current,
+    uint32_t* last,
+    int32_t* delta,
+    int64_t* continuous
+)
+{
+    int64_t tmp_curr, tmp_last, tmp_diff;
+
+    tmp_curr = (int64_t )current;
+    tmp_last = (int64_t)(*last);
+
+    tmp_diff = tmp_curr - tmp_last;
+
+    if (tmp_diff < (-encoder_ppr/2))
+    {
+        tmp_diff += encoder_ppr;
+    }
+    else if (tmp_diff > encoder_ppr/2)
+    {
+        tmp_diff -= encoder_ppr;
+    }
+
+    *delta = tmp_diff;
+    *continuous += tmp_diff;
+    *last = current;
+}
+
+void DistributionBoardNode::telemetry_publish(void)
+{
+    auto msg = hw_support_interfaces_pkg::msg::DistributionTelemetry();
+
+    msg.cells = cells_voltages;
+    msg.currents = currents;
+    msg.voltages = voltages;
+    msg.relay = safety_union.fields.relay;
+
+    telemetry_publisher_->publish(msg);
+}
+
+void DistributionBoardNode::encoders_publish(void)
+{
+    auto msg = hw_support_interfaces_pkg::msg::EncodersPosition();
+
+    msg.left_raw         = left_encoder;
+    msg.left_continuous  = left_continuous;
+    msg.left_delta       = left_delta;
+
+    msg.right_raw        = right_encoder;
+    msg.right_continuous = right_continuous;
+    msg.right_delta      = right_delta;
+
+    msg.ppr = encoder_ppr;
+
+    encoders_publisher_->publish(msg);
+}
+
+void DistributionBoardNode::callback_relay_change_state(
+    const hw_support_interfaces_pkg::srv::RelayChangeState_Request::SharedPtr request,
+    const hw_support_interfaces_pkg::srv::RelayChangeState_Response::SharedPtr response
+)
+{
+    response->status = change_relay_state(request->state);
+}
+
+bool DistributionBoardNode::change_relay_state(bool state)
+{
+    uint32_t service;
+    std::vector<uint8_t> data;
+
+    service = distribution_board::services_t::EPO_STATE;
+    data.push_back((uint8_t)state);
+
+    return send_frame(service, data);
+}
 
 
 int main(int argc, char **argv)
