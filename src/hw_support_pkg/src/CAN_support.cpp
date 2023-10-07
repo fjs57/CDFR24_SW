@@ -254,6 +254,28 @@ bool CanSupportNode::send(struct can_frame frame)
 {
     uint8_t nbytes;
 
+    char buffer[128];
+    uint8_t buffer_len = 0;
+    uint8_t data_it;
+
+    if(parameter_log_raw_frames)
+    {
+
+        for(data_it=0;data_it<frame.can_dlc;data_it++)
+        {
+            if(data_it!=0)
+            {
+                buffer_len += sprintf(&(buffer[buffer_len]), ", %02x", frame.data[data_it] );
+            }
+            else
+            {
+                buffer_len += sprintf(&(buffer[buffer_len]), "%02x", frame.data[data_it] );
+            }
+        }
+        
+        RCLCPP_INFO(this->get_logger(), "Send frame : id=%x len=%d data=[%s]", frame.can_id, frame.can_dlc, buffer);
+    }
+
     send_mutex.lock();
     nbytes = write(can_socket, &frame, sizeof(frame));
     send_mutex.unlock();
