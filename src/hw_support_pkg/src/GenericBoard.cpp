@@ -110,7 +110,7 @@ void GenericBoardNode::callback_reset_board_service(
 void GenericBoardNode::init_filter(void)
 {
     address_filter = board_bus_id << service_length;
-    address_mask = 0x07FF & (0xFFFF << (service_length-1));
+    address_mask = 0xFFFF << (service_length);
 }
 
 
@@ -177,7 +177,7 @@ void GenericBoardNode::watchdog_timer_set(void)
 
 void GenericBoardNode::callback_watchdog_timeout_trigger(void)
 {
-    RCLCPP_INFO(this->get_logger(), "watchdog triggered");
+    RCLCPP_DEBUG(this->get_logger(), "watchdog triggered");
     watchdog_state = 1;
 }
 
@@ -221,12 +221,12 @@ bool GenericBoardNode::send_frame(uint32_t service, std::vector<uint8_t> data)
     auto request = std::make_shared<hw_support_interfaces_pkg::srv::CanFrame::Request>();
 
     request->can_frame.id = construct_id(service);
-    // request->can_frame.length = data.size();
-    // request->can_frame.data = data;
+    request->can_frame.length = data.size();
+    request->can_frame.data = data;
 
-    request->can_frame.length = 0;
+    // request->can_frame.length = 0;
     // request->can_frame.data = data; 
-    (void)data;
+    // (void)data;
 
     RCLCPP_INFO(this->get_logger(),
         "request creation for id:%x len:%d",

@@ -73,7 +73,7 @@ def generate_launch_description():
     ld.add_action(can_support_node)
     # ld.add_action(generic_board_node)
     # ld.add_action(actuator_board_node)
-    # ld.add_action(motor_board_node)
+    ld.add_action(motor_board_node)
     ld.add_action(distribution_board_node)
 
     return ld

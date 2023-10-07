@@ -2,6 +2,7 @@
 
 #define DISTRIBUTION_BOARD_CELLS_COUNT 3
 #define DISTRIBUTION_BOARD_BUS_COUNT 4
+#define DISTRIBUTION_BOARD_ENCODERS_COUNT 2
 
 DistributionBoardNode::DistributionBoardNode() : GenericBoardNode("Distribution_Board"),
     raw_cells_voltages(DISTRIBUTION_BOARD_CELLS_COUNT),
@@ -66,7 +67,9 @@ void DistributionBoardNode::on_frame_received(uint32_t service, uint32_t length,
         if ( length != DISTRIBUTION_PROTOCOL_RX_SERVICE_STATUS_LENGTH )
         {
             RCLCPP_WARN(this->get_logger(), "Bad length STATUS");
+            break;
         }
+        RCLCPP_DEBUG(this->get_logger(), "length ok %d", length); 
         decode_status(data);
         break;
 
@@ -76,6 +79,7 @@ void DistributionBoardNode::on_frame_received(uint32_t service, uint32_t length,
             RCLCPP_WARN(this->get_logger(), "Bad length EPO_STATE");
             break;
         }
+        RCLCPP_DEBUG(this->get_logger(), "length ok %d", length); 
         decode_epo_state(data);
         break;
 
@@ -85,6 +89,7 @@ void DistributionBoardNode::on_frame_received(uint32_t service, uint32_t length,
             RCLCPP_WARN(this->get_logger(), "Bad length CELLS_VOLTAGE");
             break;
         }
+        RCLCPP_DEBUG(this->get_logger(), "length ok %d", length); 
         decode_cells(data);
         break;
 
@@ -94,6 +99,7 @@ void DistributionBoardNode::on_frame_received(uint32_t service, uint32_t length,
             RCLCPP_WARN(this->get_logger(), "Bad length VOLTAGES");
             break;
         }
+        RCLCPP_DEBUG(this->get_logger(), "length ok %d", length); 
         decode_voltages(data);
         break;
 
@@ -103,6 +109,7 @@ void DistributionBoardNode::on_frame_received(uint32_t service, uint32_t length,
             RCLCPP_WARN(this->get_logger(), "Bad length CURRENTS");
             break;
         }
+        RCLCPP_DEBUG(this->get_logger(), "length ok %d", length); 
         decode_currents(data);
         break;
 
@@ -112,6 +119,7 @@ void DistributionBoardNode::on_frame_received(uint32_t service, uint32_t length,
             RCLCPP_WARN(this->get_logger(), "Bad length ENCODERS");
             break;
         }
+        RCLCPP_DEBUG(this->get_logger(), "length ok %d", length); 
         decode_encoders(data);
         break;
 
@@ -218,7 +226,7 @@ void DistributionBoardNode::decode_encoders(std::vector<uint8_t> data)
     uint16_t tmp;
     uint32_t* encoder[] = {&left_encoder, &right_encoder};
 
-    for(it=0;it<DISTRIBUTION_BOARD_BUS_COUNT;it++)
+    for(it=0;it<DISTRIBUTION_BOARD_ENCODERS_COUNT;it++)
     {
         tmp = (uint16_t)(data[2*it]) & 0x00FF;
         tmp |= ((uint16_t)(data[2*it+1]) << 8)& 0xFF00;
