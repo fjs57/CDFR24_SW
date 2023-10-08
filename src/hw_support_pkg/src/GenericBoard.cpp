@@ -110,7 +110,14 @@ void GenericBoardNode::callback_reset_board_service(
 void GenericBoardNode::init_filter(void)
 {
     address_filter = board_bus_id << service_length;
-    address_mask = 0xFFFF << (service_length);
+    address_mask = 0xFFFF << service_length;
+
+    RCLCPP_INFO(
+        this->get_logger(),
+        "Filter : id %04x, mask %04x ",
+        address_filter,
+        address_mask
+    );
 }
 
 
