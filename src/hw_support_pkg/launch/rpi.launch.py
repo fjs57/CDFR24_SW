@@ -14,9 +14,9 @@ def generate_launch_description():
             {"filter_mask"          : 0x0000    },
             {"timeout_seconds"      : 0         },
             {"timeout_microseconds" : 500000    },
-            {"log_raw_frames"       : False     }
+            {"log_raw_frames"       : True      }
         ],
-	    arguments=['--ros-args', '--log-level', 'info']
+	    arguments=['--ros-args', '--log-level', 'debug']
     )
 
     ld.add_action(can_support_node)
