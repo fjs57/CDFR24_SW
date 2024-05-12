@@ -248,12 +248,12 @@ void DistributionBoardNode::encoders_compute(
 {
     int64_t tmp_curr, tmp_last, tmp_diff;
 
-    tmp_curr = (int64_t )current;
+    tmp_curr = (int64_t)current;
     tmp_last = (int64_t)(*last);
 
     tmp_diff = tmp_curr - tmp_last;
 
-    if (tmp_diff < (-encoder_ppr/2))
+    if (tmp_diff < (-((int64_t)encoder_ppr)/2))
     {
         tmp_diff += encoder_ppr;
     }

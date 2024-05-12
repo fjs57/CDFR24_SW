@@ -112,7 +112,7 @@ void ActuatorBoardNode::decode_servo_set(std::vector<uint8_t> data)
     uint8_t id;
     
     id = data[0];
-    if ( id >= ACTUATOR_BOARD_SERVO_COUNT )
+    if ( ((id-1) >= ACTUATOR_BOARD_SERVO_COUNT ) || ( id == 0 ) )
     {
         RCLCPP_WARN(this->get_logger(), "servo id out of bound, id=%d", id);
         return;
@@ -122,7 +122,7 @@ void ActuatorBoardNode::decode_servo_set(std::vector<uint8_t> data)
 
     position = ( int16_t )( ( ( (uint16_t)(data[2]) << 8 ) & 0xFF00 ) | ( (uint16_t)(data[1]) & 0x00FF ) );
 
-    servo_positions[id] = position;
+    servo_positions[id-1] = position;
 
 
     RCLCPP_DEBUG(this->get_logger(), "Message decoded : servo num %d at %d degrees", id, position);

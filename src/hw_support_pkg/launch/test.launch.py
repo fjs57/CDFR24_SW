@@ -30,16 +30,16 @@ def generate_launch_description():
 	#     arguments=['--ros-args', '--log-level', 'info']
     # )
 
-    actuator_board_node = Node(
-        package="hw_support_pkg",
-        executable="actuator_board_node",
-        parameters=[
-            {"board_bus_id"         : 6         },
-            {"service_length"       : 5         },
-            {"watchdog_timeout"     : 2000      }
-        ],
-	    arguments=['--ros-args', '--log-level', 'info']
-    )
+    # actuator_board_node = Node(
+    #     package="hw_support_pkg",
+    #     executable="actuator_board_node",
+    #     parameters=[
+    #         {"board_bus_id"         : 6         },
+    #         {"service_length"       : 5         },
+    #         {"watchdog_timeout"     : 2000      }
+    #     ],
+	#     arguments=['--ros-args', '--log-level', 'info']
+    # )
 
     motor_board_node = Node(
         package="hw_support_pkg",
@@ -49,7 +49,7 @@ def generate_launch_description():
             {"service_length"       : 5         },
             {"watchdog_timeout"     : 2000      }
         ],
-	    arguments=['--ros-args', '--log-level', 'info']
+	    arguments=['--ros-args', '--log-level', 'debug']
     )
 
     distribution_board_node = Node(
@@ -72,7 +72,7 @@ def generate_launch_description():
 
     ld.add_action(can_support_node)
     # ld.add_action(generic_board_node)
-    ld.add_action(actuator_board_node)
+    # ld.add_action(actuator_board_node)
     ld.add_action(motor_board_node)
     ld.add_action(distribution_board_node)
 
