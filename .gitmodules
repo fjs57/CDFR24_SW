@@ -1,4 +1,0 @@
-[submodule "src/lidar_pkg"]
-	path = src/lidar_pkg
-	url = https://github.com/YDLIDAR/ydlidar_ros2_driver.git
-	branch = humble
