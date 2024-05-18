@@ -17,7 +17,6 @@ ament_target_dependencies(can_support_node rclcpp hw_support_interfaces_pkg)
 # add_executable(generic_board_node src/GenericBoard.cpp)
 # ament_target_dependencies(generic_board_node rclcpp hw_support_interfaces_pkg)
 
-
 add_executable(actuator_board_node src/ActuatorBoard.cpp src/GenericBoard.cpp)
 ament_target_dependencies(actuator_board_node rclcpp hw_support_interfaces_pkg)
 

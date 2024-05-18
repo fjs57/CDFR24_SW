@@ -16,7 +16,7 @@ def generate_launch_description():
             {"timeout_microseconds" : 500000    },
             {"log_raw_frames"       : True      }
         ],
-	    arguments=['--ros-args', '--log-level', 'debug']
+	    arguments=['--ros-args', '--log-level', 'info']
     )
 
     ld.add_action(can_support_node)
