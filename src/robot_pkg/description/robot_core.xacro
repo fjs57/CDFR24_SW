@@ -83,18 +83,18 @@
     <link name="motor_left_wheel">
         <visual>
             <geometry>
-                <cylinder radius="${motor_wheel_diameter/2}" length="${motor_wheel_width/2}"/>
+                <cylinder radius="${motor_wheel_diameter/2}" length="${motor_wheel_width}"/>
             </geometry>
             <material name="white"/>
         </visual>
         <collision>
             <geometry>
-                <cylinder radius="${motor_wheel_diameter/2}" length="${motor_wheel_width/2}"/>
+                <cylinder radius="${motor_wheel_diameter/2}" length="${motor_wheel_width}"/>
             </geometry>
         </collision>
         <inertial>
             <mass value="0.1"/>
-            <origin xyz="0.0 0.0 0.025" rpy="0.0 0.0 0.0"/>
+            <origin xyz="0.0 0.0 0.01" rpy="0.0 0.0 0.0"/>
             <inertia ixx="0.00007" ixy="0.0" ixz="0.0" iyy="0.00007" iyz="0.0" izz="0.00008"/>
         </inertial>
     </link>
@@ -109,18 +109,18 @@
     <link name="motor_right_wheel">
         <visual>
             <geometry>
-                <cylinder radius="${motor_wheel_diameter/2}" length="${motor_wheel_width/2}"/>
+                <cylinder radius="${motor_wheel_diameter/2}" length="${motor_wheel_width}"/>
             </geometry>
             <material name="white"/>
         </visual>
         <collision>
             <geometry>
-                <cylinder radius="${motor_wheel_diameter/2}" length="${motor_wheel_width/2}"/>
+                <cylinder radius="${motor_wheel_diameter/2}" length="${motor_wheel_width}"/>
             </geometry>
         </collision>
         <inertial>
             <mass value="0.1"/>
-            <origin xyz="0.0 0.0 0.025" rpy="0.0 0.0 0.0"/>
+            <origin xyz="0.0 0.0 0.01" rpy="0.0 0.0 0.0"/>
             <inertia ixx="0.00007" ixy="0.0" ixz="0.0" iyy="0.00007" iyz="0.0" izz="0.00008"/>
         </inertial>
     </link>
@@ -143,6 +143,7 @@
         </visual>
         <inertial>
             <mass value="0.01"/>
+            <origin xyz="0.0 0.0 0.01" rpy="0.0 0.0 0.0"/>
             <inertia ixx="0.000007" ixy="0.0" ixz="0.0" iyy="0.000007" iyz="0.0" izz="0.000008"/>
         </inertial>
     </link>
@@ -163,6 +164,7 @@
         </visual>
         <inertial>
             <mass value="0.01"/>
+            <origin xyz="0.0 0.0 0.01" rpy="0.0 0.0 0.0"/>
             <inertia ixx="0.000007" ixy="0.0" ixz="0.0" iyy="0.000007" iyz="0.0" izz="0.000008"/>
         </inertial>
     </link>
@@ -184,7 +186,7 @@
         </visual>
         <collision>
             <geometry>
-                <cylinder radius="0.01" length="${chassis_base_height-2}"/>
+                <cylinder radius="0.01" length="${chassis_base_height-0.002}"/>
             </geometry>
         </collision>
     </link>
@@ -210,7 +212,7 @@
         </visual>
         <collision>
             <geometry>
-                <cylinder radius="0.01" length="${chassis_base_height-2}"/>
+                <cylinder radius="0.01" length="${chassis_base_height-0.002}"/>
             </geometry>
         </collision>
     </link>
