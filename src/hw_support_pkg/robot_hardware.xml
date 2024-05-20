@@ -1,0 +1,9 @@
+<library path="steering_hardware_interface">
+  <class name="steering_hardware_interface/SteeringHardwareInterface"
+         type="SteeringHardwareInterface"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      Hardware Interface for Differential Drive.
+    </description>
+  </class>
+</library>
