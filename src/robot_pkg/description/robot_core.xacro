@@ -172,7 +172,7 @@
     <joint name="front_caster_wheel_joint" type="fixed">
         <parent link="base_link"/>
         <child link="front_caster_wheel"/>
-        <origin xyz="0.080 0 0" rpy="${pi} 0 0"/>
+        <origin xyz="0.080 0 ${chassis_base_height/2 - motor_wheel_diameter/2}" rpy="${pi} 0 0"/>
     </joint>
 
     <link name="front_caster_wheel">
@@ -198,7 +198,7 @@
     <joint name="back_caster_wheel_joint" type="fixed">
         <parent link="base_link"/>
         <child link="back_caster_wheel"/>
-        <origin xyz="-0.080 0 0" rpy="0 0 0"/>
+        <origin xyz="-0.080 0 ${chassis_base_height/2 - motor_wheel_diameter/2}" rpy="0 0 0"/>
     </joint>
 
     <link name="back_caster_wheel">
