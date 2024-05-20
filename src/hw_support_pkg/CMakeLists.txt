@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.8)
 project(hw_support_pkg)
 
+# set(CMAKE_STATIC_LIBRARY_PREFIX "")
+
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
@@ -11,6 +13,8 @@ find_package(hw_support_interfaces_pkg REQUIRED)
 find_package(controller_manager REQUIRED)
 find_package(hardware_interface REQUIRED)
 find_package(pluginlib REQUIRED)
+
+pluginlib_export_plugin_description_file(hardware_interface robot_hardware.xml)
 
 include_directories(include/hw_support_pkg)
 
@@ -26,7 +30,7 @@ ament_target_dependencies(motor_board_node rclcpp hw_support_interfaces_pkg)
 add_executable(distribution_board_node src/DistributionBoard.cpp src/GenericBoard.cpp)
 ament_target_dependencies(distribution_board_node rclcpp hw_support_interfaces_pkg)
 
-add_library(steering_hardware_interface src/DistributionBoard.cpp)
+add_library(steering_hardware_interface src/SteeringHardwareInterface.cpp)
 
 ament_target_dependencies(
   steering_hardware_interface
@@ -36,7 +40,15 @@ ament_target_dependencies(
   hw_support_interfaces_pkg
 )
 
-pluginlib_export_plugin_description_file(hardware_interface robot_hardware.xml)
+
+install(
+  DIRECTORY include/
+  DESTINATION include
+)
+
+ament_export_include_directories(
+  include
+)
 
 install(
   TARGETS steering_hardware_interface

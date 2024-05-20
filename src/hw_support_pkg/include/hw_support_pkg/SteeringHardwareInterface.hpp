@@ -19,6 +19,9 @@
 
 #include "hw_support_interfaces_pkg/srv/motors_settings.hpp"
 
+namespace steering_hardware_interface
+{
+
 class SteeringHardwareInterface : 
     public hardware_interface::SystemInterface
 {
@@ -80,5 +83,7 @@ private:
 
 
 }; 
+
+}
 
 #endif // STEERING_HARDWARE_INTERFACE

@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
     <xacro:unless value="$(arg sim_mode)">
-        <ros2_control name="RealRobot" type="system">
+        <ros2_control name="physical_robot" type="system">
             <hardware>
                 <plugin>steering_hardware_interface/SteeringHardwareInterface</plugin>
                 <param name="left_wheel_name">left_wheel_joint</param>
