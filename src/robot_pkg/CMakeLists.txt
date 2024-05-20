@@ -11,13 +11,7 @@ find_package(rclcpp REQUIRED)
 
 install(DIRECTORY
   launch
-  DESTINATION share/${PROJECT_NAME}
-)
-install(DIRECTORY
   config
-  DESTINATION share/${PROJECT_NAME}
-)
-install(DIRECTORY
   description
   DESTINATION share/${PROJECT_NAME}
 )
