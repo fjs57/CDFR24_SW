@@ -23,15 +23,18 @@
 #include "hardware_interface/hardware_info.hpp"
 #include "hardware_interface/system_interface.hpp"
 #include "hardware_interface/types/hardware_interface_return_values.hpp"
-#include "rclcpp/clock.hpp"
-#include "rclcpp/duration.hpp"
-#include "rclcpp/macros.hpp"
-#include "rclcpp/time.hpp"
-#include "rclcpp_lifecycle/node_interfaces/lifecycle_node_interface.hpp"
-#include "rclcpp_lifecycle/state.hpp"
+#include <rclcpp/clock.hpp>
+#include <rclcpp/duration.hpp>
+#include <rclcpp/macros.hpp>
+#include <rclcpp/time.hpp>
+#include <rclcpp/executors/single_threaded_executor.hpp>
+#include <rclcpp_lifecycle/node_interfaces/lifecycle_node_interface.hpp>
+#include <rclcpp_lifecycle/state.hpp>
 #include <rclcpp/node.hpp>
 #include <rclcpp/subscription.hpp>
 #include <rclcpp/publisher.hpp>
+
+// #include <single_threaded_executor.hpp>
 
 #include "visibility_control.h"
 
@@ -73,6 +76,7 @@ namespace robot_pkg
 			hardware_interface::return_type write(const rclcpp::Time & time, const rclcpp::Duration & period) override;
 
 		private:
+			rclcpp::executors::SingleThreadedExecutor m_executor;
 			rclcpp::Node::SharedPtr m_node;
 			rclcpp::Logger m_logger;
 
@@ -84,12 +88,19 @@ namespace robot_pkg
 			uint32_t m_param_encoder_step_per_rev;
 			bool m_param_invert_motor_left, m_param_invert_motor_right;
 			bool m_param_invert_encoder_left, m_param_invert_encoder_right;
+			bool m_param_swap_motors, m_param_swap_encoders;
 			double m_param_motor_acceleration;
 			double m_param_encoder_read_frequency;
+
+			double m_param_encoder_wheel_diameter;
+			double m_param_encoder_wheel_separation;
+			double m_param_motor_wheel_diameter;
+			double m_param_motor_wheel_separation;
 
 			bool m_set_enabled, m_real_enabled;
 			double m_set_speed_left, m_set_speed_right;
 			double m_motor_speed_left, m_motor_speed_right;
+			double m_cmd_motor_speed_left, m_cmd_motor_speed_right;
 			double m_motor_position_left, m_motor_position_right;
 			double m_encoder_speed_left, m_encoder_speed_right;
 			double m_encoder_position_left, m_encoder_position_right;

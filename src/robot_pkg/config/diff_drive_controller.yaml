@@ -12,14 +12,14 @@ controller_manager:
 diff_cont:
   ros__parameters:
 
-    publish_rate: 10
+    publish_rate: 10.0
 
     base_frame_id: base_link
 
     left_wheel_names: ['left_wheel_joint']
     right_wheel_names: ['right_wheel_joint']
-    wheel_separation: 0.114
-    wheel_radius: 0.025
+    wheel_separation: 0.1425
+    wheel_radius: 0.0236
 
     use_stamped_vel: false
 

@@ -10,11 +10,17 @@
                 <param name="motor_step_per_revolution">1600</param>
                 <param name="encoder_step_per_rev">4096</param>
                 <param name="invert_motor_left">false</param>
-                <param name="invert_motor_right">false</param>
+                <param name="invert_motor_right">true</param>
                 <param name="invert_encoder_left">false</param>
-                <param name="invert_encoder_right">false</param>
-                <param name="motors_acceleration">6400</param>
-                <param name="encoders_read_frequency">20</param>
+                <param name="invert_encoder_right">true</param>
+                <param name="swap_motors">false</param>
+                <param name="swap_encoders">false</param>
+                <param name="motors_acceleration">1600</param>
+                <param name="encoders_read_frequency">20.0</param>
+                <param name="encoder_wheel_diameter">0.0472</param>
+                <param name="encoder_wheel_separation">0.1425</param>
+                <param name="motor_wheel_diameter">0.0472</param>
+                <param name="motor_wheel_separation">0.1135</param>
             </hardware>
             <joint name="left_wheel_joint">
                 <command_interface name="velocity">

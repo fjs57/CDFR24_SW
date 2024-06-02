@@ -49,7 +49,7 @@ def generate_launch_description():
             {"service_length"       : 5         },
             {"watchdog_timeout"     : 2000      }
         ],
-	    arguments=['--ros-args', '--log-level', 'debug']
+	    arguments=['--ros-args', '--log-level', 'info']
     )
 
     distribution_board_node = Node(
