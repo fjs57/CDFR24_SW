@@ -8,6 +8,7 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(hw_support_interfaces_pkg REQUIRED)
 
 install(DIRECTORY
   launch
@@ -27,6 +28,7 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
   pluginlib
   rclcpp
   rclcpp_lifecycle
+  hw_support_interfaces_pkg
 )
 
 # find dependencies
@@ -37,6 +39,9 @@ endforeach()
 
 
 ## COMPILE
+
+include_directories(hardware/include/robot_pkg)
+
 add_library(
   robot_pkg
   SHARED

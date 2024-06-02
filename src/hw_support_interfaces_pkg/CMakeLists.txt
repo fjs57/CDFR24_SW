@@ -22,6 +22,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/RelayChangeState.srv"
   "srv/ResetBoard.srv"
   "srv/ServoGoto.srv"
+  "srv/GetEncoderPosition.srv"
 )
 ament_export_dependencies(rosidl_default_runtime)
 

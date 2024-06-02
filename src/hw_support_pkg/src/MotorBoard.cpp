@@ -25,6 +25,26 @@ MotorBoardNode::MotorBoardNode() : GenericBoardNode("Motor_Board")
             std::placeholders::_2
         )
     );
+
+    motors_enable_subscriber_ = this->create_subscription<std_msgs::msg::Bool>(
+        "motors_enable",
+        2,
+        std::bind(
+            &MotorBoardNode::callback_on_enable_received,
+            this,
+            std::placeholders::_1
+        )
+    );
+
+    motors_set_speeds_subsciber_ = this->create_subscription<std_msgs::msg::Int32MultiArray>(
+        "motors_set_speeds",
+        2,
+        std::bind(
+            &MotorBoardNode::callback_on_set_speed_received,
+            this,
+            std::placeholders::_1
+        )
+    );
 }
 
 MotorBoardNode::~MotorBoardNode()
@@ -239,7 +259,7 @@ void MotorBoardNode::callback_motors_settings_service(
     const hw_support_interfaces_pkg::srv::MotorsSettings::Response::SharedPtr response
 )
 {
-    RCLCPP_INFO(this->get_logger(), "sending enables");
+    RCLCPP_DEBUG(this->get_logger(), "sending enables");
 
     if ( !set_enables(request->left_enable, request->right_enable) )
     {
@@ -247,7 +267,7 @@ void MotorBoardNode::callback_motors_settings_service(
         return;
     }
 
-    RCLCPP_INFO(this->get_logger(), "sending speeds");
+    RCLCPP_DEBUG(this->get_logger(), "sending speeds");
 
     if ( !set_speeds(request->left_set_speed, request->right_set_speed) )
     {
@@ -255,7 +275,7 @@ void MotorBoardNode::callback_motors_settings_service(
         return;
     }
 
-    RCLCPP_INFO(this->get_logger(), "sending accelerations");
+    RCLCPP_DEBUG(this->get_logger(), "sending accelerations");
 
     if ( !set_accelerations(request->left_set_acc, request->right_set_acc) )
     {
@@ -263,9 +283,33 @@ void MotorBoardNode::callback_motors_settings_service(
         return;
     }
 
-    RCLCPP_INFO(this->get_logger(), "sending sucessful");
+    RCLCPP_DEBUG(this->get_logger(), "sending sucessful");
 
     response->status = true;
+}
+
+void MotorBoardNode::callback_on_set_speed_received(std_msgs::msg::Int32MultiArray::SharedPtr msg)
+{
+
+    if (msg->data.empty())
+    {
+        RCLCPP_ERROR(this->get_logger(), "set speeds command received but empty");
+        return;
+    }
+
+    if (msg->data.size() != 2)
+    {
+        RCLCPP_ERROR(this->get_logger(), "set speeds command received but size does not match (%lu != 2)", msg->data.size());
+        return;
+    }
+
+    RCLCPP_DEBUG(this->get_logger(), "set speeds : %d|%d", msg->data[0], msg->data[1]);
+}
+
+void MotorBoardNode::callback_on_enable_received(std_msgs::msg::Bool::SharedPtr msg)
+{
+    RCLCPP_DEBUG(this->get_logger(), "set enables : %d", msg->data);
+    set_enables(msg->data, msg->data);
 }
 
 bool MotorBoardNode::set_enables(bool left, bool right)

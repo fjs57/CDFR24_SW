@@ -6,6 +6,9 @@
 #include "hw_support_interfaces_pkg/msg/motors_state.hpp"
 #include "hw_support_interfaces_pkg/srv/motors_settings.hpp"
 
+#include "std_msgs/msg/int32_multi_array.hpp"
+#include "std_msgs/msg/bool.hpp"
+
 namespace motor_board
 {
     class StepperMotor
@@ -35,12 +38,18 @@ private :
     rclcpp::Service<hw_support_interfaces_pkg::srv::MotorsSettings>::SharedPtr motors_settings_service_;
     rclcpp::Publisher<hw_support_interfaces_pkg::msg::MotorsState>::SharedPtr motors_state_publisher_;
 
+    rclcpp::Subscription<std_msgs::msg::Int32MultiArray>::SharedPtr motors_set_speeds_subsciber_;
+    rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr motors_enable_subscriber_;
+
     void publish_motors_state(void);
 
     void callback_motors_settings_service(
         const hw_support_interfaces_pkg::srv::MotorsSettings::Request::SharedPtr request,
         const hw_support_interfaces_pkg::srv::MotorsSettings::Response::SharedPtr response
     );
+
+    void callback_on_set_speed_received(std_msgs::msg::Int32MultiArray::SharedPtr msg);
+    void callback_on_enable_received(std_msgs::msg::Bool::SharedPtr msg);
     
     void on_frame_received(uint32_t service, uint32_t length, std::vector<uint8_t> data);
 

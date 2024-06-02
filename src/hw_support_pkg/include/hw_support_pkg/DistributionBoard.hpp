@@ -7,6 +7,7 @@
 #include "hw_support_interfaces_pkg/msg/distribution_telemetry.hpp"
 #include "hw_support_interfaces_pkg/msg/encoders_position.hpp"
 #include "hw_support_interfaces_pkg/srv/relay_change_state.hpp"
+#include "hw_support_interfaces_pkg/srv/get_encoder_position.hpp"
 
 class DistributionBoardNode : public GenericBoardNode
 {
@@ -38,6 +39,7 @@ private :
     rclcpp::Publisher<hw_support_interfaces_pkg::msg::EncodersPosition>::SharedPtr encoders_publisher_;
     
     rclcpp::Service<hw_support_interfaces_pkg::srv::RelayChangeState>::SharedPtr relay_change_state_service_;
+    rclcpp::Service<hw_support_interfaces_pkg::srv::GetEncoderPosition>::SharedPtr get_encoder_position_service_;
 
     void on_frame_received(uint32_t service, uint32_t length, std::vector<uint8_t> data);
 
@@ -56,6 +58,11 @@ private :
     void callback_relay_change_state(
         const hw_support_interfaces_pkg::srv::RelayChangeState_Request::SharedPtr request,
         const hw_support_interfaces_pkg::srv::RelayChangeState_Response::SharedPtr response
+    );
+
+    void callback_get_encoder_position(
+        const hw_support_interfaces_pkg::srv::GetEncoderPosition_Request::SharedPtr request,
+        const hw_support_interfaces_pkg::srv::GetEncoderPosition_Response::SharedPtr response
     );
 
     bool change_relay_state(bool state);

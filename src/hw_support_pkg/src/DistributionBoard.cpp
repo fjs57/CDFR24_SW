@@ -40,6 +40,16 @@ DistributionBoardNode::DistributionBoardNode() : GenericBoardNode("Distribution_
             std::placeholders::_2
         )
     );
+
+    get_encoder_position_service_ = this->create_service<hw_support_interfaces_pkg::srv::GetEncoderPosition>(
+        "get_encoder_position",
+        std::bind(
+            &DistributionBoardNode::callback_get_encoder_position,
+            this,
+            std::placeholders::_1,
+            std::placeholders::_2
+        )
+    );
 }
 
 DistributionBoardNode::~DistributionBoardNode()
@@ -315,6 +325,16 @@ bool DistributionBoardNode::change_relay_state(bool state)
     return send_frame(service, data);
 }
 
+void DistributionBoardNode::callback_get_encoder_position(
+    const hw_support_interfaces_pkg::srv::GetEncoderPosition_Request::SharedPtr request,
+    const hw_support_interfaces_pkg::srv::GetEncoderPosition_Response::SharedPtr response
+)
+{
+    (void)request;
+    response->left = left_encoder;
+    response->right = right_encoder;
+    RCLCPP_INFO(this->get_logger(), "get_encoder_position service called");
+}
 
 int main(int argc, char **argv)
 {

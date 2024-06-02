@@ -208,11 +208,11 @@ void GenericBoardNode::set_status_vector(uint64_t value)
 bool GenericBoardNode::send_frame(uint32_t service, std::vector<uint8_t> data)
 {
 
-    RCLCPP_INFO(this->get_logger(), "enter sending frame");
+    RCLCPP_DEBUG(this->get_logger(), "enter sending frame");
 
     auto client = this->create_client<hw_support_interfaces_pkg::srv::CanFrame>("send_frame");
 
-    RCLCPP_INFO(this->get_logger(), "client created");
+    RCLCPP_DEBUG(this->get_logger(), "client created");
 
     while(!client->wait_for_service(std::chrono::seconds(1))) // waits for the service to be up
     {
@@ -220,10 +220,10 @@ bool GenericBoardNode::send_frame(uint32_t service, std::vector<uint8_t> data)
             RCLCPP_ERROR(this->get_logger(), "Interrupted while waiting for the service. Exiting.");
             return 0;
         }
-        RCLCPP_INFO(this->get_logger(), "waiting for sender service to be up");
+        RCLCPP_DEBUG(this->get_logger(), "waiting for sender service to be up");
     }
 
-    RCLCPP_INFO(this->get_logger(), "service up");
+    RCLCPP_DEBUG(this->get_logger(), "service up");
 
     auto request = std::make_shared<hw_support_interfaces_pkg::srv::CanFrame::Request>();
 
@@ -235,7 +235,7 @@ bool GenericBoardNode::send_frame(uint32_t service, std::vector<uint8_t> data)
     // request->can_frame.data = data; 
     // (void)data;
 
-    RCLCPP_INFO(this->get_logger(),
+    RCLCPP_DEBUG(this->get_logger(),
         "request creation for id:%x len:%d",
         request->can_frame.id,
         request->can_frame.length

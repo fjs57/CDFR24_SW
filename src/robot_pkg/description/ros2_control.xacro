@@ -5,11 +5,6 @@
         <ros2_control name="physical_robot" type="system">
             <hardware>
             <plugin>robot_pkg/DiffBotSystemHardware</plugin>
-            <param name="example_param_hw_start_duration_sec">0</param>
-            <param name="example_param_hw_stop_duration_sec">3.0</param>
-            </hardware>
-            <!-- <hardware>
-                <plugin>steering_hardware_interface/SteeringHardwareInterface</plugin>
                 <param name="left_wheel_name">left_wheel_joint</param>
                 <param name="right_wheel_name">right_wheel_joint</param>
                 <param name="motor_step_per_revolution">1600</param>
@@ -20,19 +15,19 @@
                 <param name="invert_encoder_right">false</param>
                 <param name="motors_acceleration">6400</param>
                 <param name="encoders_read_frequency">20</param>
-            </hardware> -->
+            </hardware>
             <joint name="left_wheel_joint">
                 <command_interface name="velocity">
-                    <param name="min">-3</param>
-                    <param name="max">3</param>
+                    <max>3</max>
+                    <min>-3</min>               
                 </command_interface>
                 <state_interface name="position"/>
                 <state_interface name="velocity"/>
             </joint>
             <joint name="right_wheel_joint">
                 <command_interface name="velocity">
-                    <param name="min">-3</param>
-                    <param name="max">3</param>
+                    <max>3</max>
+                    <min>-3</min>             
                 </command_interface>
                 <state_interface name="position"/>
                 <state_interface name="velocity"/>

@@ -29,52 +29,85 @@
 #include "rclcpp/time.hpp"
 #include "rclcpp_lifecycle/node_interfaces/lifecycle_node_interface.hpp"
 #include "rclcpp_lifecycle/state.hpp"
+#include <rclcpp/node.hpp>
+#include <rclcpp/subscription.hpp>
+#include <rclcpp/publisher.hpp>
 
-#include "robot_pkg/visibility_control.h"
+#include "visibility_control.h"
+
+#include "hw_support_interfaces_pkg/msg/motors_state.hpp"
+#include "hw_support_interfaces_pkg/msg/encoders_position.hpp"
+
+#include "hw_support_interfaces_pkg/srv/motors_settings.hpp"
+#include "hw_support_interfaces_pkg/srv/get_encoder_position.hpp"
 
 namespace robot_pkg
 {
-class DiffBotSystemHardware : public hardware_interface::SystemInterface
-{
-public:
-  RCLCPP_SHARED_PTR_DEFINITIONS(DiffBotSystemHardware)//; (macro doesn't need ; to end block)
+	class DiffBotSystemHardware : public hardware_interface::SystemInterface
+	{
+		public:
 
-  ROBOT_PKG_PUBLIC
-  hardware_interface::CallbackReturn on_init(
-    const hardware_interface::HardwareInfo & info) override;
+			DiffBotSystemHardware();
 
-  ROBOT_PKG_PUBLIC
-  std::vector<hardware_interface::StateInterface> export_state_interfaces() override;
+			RCLCPP_SHARED_PTR_DEFINITIONS(DiffBotSystemHardware)//; (macro doesn't need ; to end block)
 
-  ROBOT_PKG_PUBLIC
-  std::vector<hardware_interface::CommandInterface> export_command_interfaces() override;
+			ROBOT_PKG_PUBLIC
+			hardware_interface::CallbackReturn on_init(const hardware_interface::HardwareInfo & info) override;
 
-  ROBOT_PKG_PUBLIC
-  hardware_interface::CallbackReturn on_activate(
-    const rclcpp_lifecycle::State & previous_state) override;
+			ROBOT_PKG_PUBLIC
+			std::vector<hardware_interface::StateInterface> export_state_interfaces() override;
 
-  ROBOT_PKG_PUBLIC
-  hardware_interface::CallbackReturn on_deactivate(
-    const rclcpp_lifecycle::State & previous_state) override;
+			ROBOT_PKG_PUBLIC
+			std::vector<hardware_interface::CommandInterface> export_command_interfaces() override;
 
-  ROBOT_PKG_PUBLIC
-  hardware_interface::return_type read(
-    const rclcpp::Time & time, const rclcpp::Duration & period) override;
+			ROBOT_PKG_PUBLIC
+			hardware_interface::CallbackReturn on_activate(const rclcpp_lifecycle::State & previous_state) override;
 
-  ROBOT_PKG_PUBLIC
-  hardware_interface::return_type write(
-    const rclcpp::Time & time, const rclcpp::Duration & period) override;
+			ROBOT_PKG_PUBLIC
+			hardware_interface::CallbackReturn on_deactivate(const rclcpp_lifecycle::State & previous_state) override;
 
-private:
-  // Parameters for the DiffBot simulation
-  double hw_start_sec_;
-  double hw_stop_sec_;
+			ROBOT_PKG_PUBLIC
+			hardware_interface::return_type read(const rclcpp::Time & time, const rclcpp::Duration & period) override;
 
-  // Store the command for the simulated robot
-  std::vector<double> hw_commands_;
-  std::vector<double> hw_positions_;
-  std::vector<double> hw_velocities_;
-};
+			ROBOT_PKG_PUBLIC
+			hardware_interface::return_type write(const rclcpp::Time & time, const rclcpp::Duration & period) override;
+
+		private:
+			rclcpp::Node::SharedPtr m_node;
+			rclcpp::Logger m_logger;
+
+			rclcpp::Subscription<hw_support_interfaces_pkg::msg::MotorsState>::SharedPtr m_motors_state_subscriber;
+    		rclcpp::Subscription<hw_support_interfaces_pkg::msg::EncodersPosition>::SharedPtr m_encoders_state_subscriber;
+
+			std::string m_param_left_wheel_name, m_param_right_wheel_name;
+			uint32_t m_param_motor_step_per_rev;
+			uint32_t m_param_encoder_step_per_rev;
+			bool m_param_invert_motor_left, m_param_invert_motor_right;
+			bool m_param_invert_encoder_left, m_param_invert_encoder_right;
+			double m_param_motor_acceleration;
+			double m_param_encoder_read_frequency;
+
+			bool m_set_enabled, m_real_enabled;
+			double m_set_speed_left, m_set_speed_right;
+			double m_motor_speed_left, m_motor_speed_right;
+			double m_motor_position_left, m_motor_position_right;
+			double m_encoder_speed_left, m_encoder_speed_right;
+			double m_encoder_position_left, m_encoder_position_right;
+
+			std::string get_parameter_in_hardware_info_select(const hardware_interface::HardwareInfo & hardware_info, const std::string name);
+    		CallbackReturn get_parameter_in_hardware_info(const hardware_interface::HardwareInfo & hardware_info);
+
+			void callback_on_receive_motors_state(hw_support_interfaces_pkg::msg::MotorsState motors_state);
+    		void callback_on_receive_encoders_state(hw_support_interfaces_pkg::msg::EncodersPosition encoders_state);
+
+			double motor_compute_position(int32_t raw);
+			double motor_compute_speed(int32_t raw);
+			int32_t motor_encode_speed(double speed);
+			uint32_t motor_encode_acceleration(double acc);
+			double encoder_compute_position(int32_t raw);
+			double encoder_compute_speed(int32_t raw);
+			bool send_motor_parameters(void);
+	};
 
 }  // namespace robot_pkg
 

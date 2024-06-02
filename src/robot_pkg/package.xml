@@ -13,11 +13,11 @@
   <depend>pluginlib</depend>
   <depend>rclcpp</depend>
   <depend>rclcpp_lifecycle</depend>
+  <depend>hw_support_pkg</depend>
+  <depend>hw_support_interfaces_pkg</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
-
-  <depend>steering_hardware_interface</depend>
 
   <export>
     <build_type>ament_cmake</build_type>
