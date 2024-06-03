@@ -39,7 +39,7 @@ namespace robot_pkg
   	{
 		hardware_interface::CallbackReturn return_value;
 
-		RCLCPP_DEBUG(m_logger, "Start initilization");
+		RCLCPP_INFO(m_logger, "Start initilization");
 
 		if (hardware_interface::SystemInterface::on_init(info) != hardware_interface::CallbackReturn::SUCCESS)
 		{
@@ -226,7 +226,7 @@ namespace robot_pkg
         //return hardware_interface::return_type::OK;
 
 		// TODO : compute speed based on the period given in argument
-        RCLCPP_INFO(m_logger, "Read");
+        RCLCPP_DEBUG(m_logger, "Read");
 
         return hardware_interface::return_type::OK;
         /*
@@ -280,7 +280,7 @@ namespace robot_pkg
         double linear_speed, angular_speed; //m/s
         double encoder_wheel_radius, motor_wheel_radius;
 
-        RCLCPP_INFO(m_logger, "Write");
+        RCLCPP_DEBUG(m_logger, "Write");
 
         motor_wheel_radius = m_param_motor_wheel_diameter/2;
         encoder_wheel_radius = m_param_encoder_wheel_diameter/2;
@@ -288,19 +288,19 @@ namespace robot_pkg
 
         // commanded speed (on the encoders wheel)
 
-        RCLCPP_INFO(m_logger, "Write > received encoder speeds [%.02f, %.02f]", m_cmd_motor_speed_left, m_cmd_motor_speed_right);
+        RCLCPP_DEBUG(m_logger, "Write > received encoder speeds [%.02f, %.02f]", m_cmd_motor_speed_left, m_cmd_motor_speed_right);
 
         linear_speed = (m_cmd_motor_speed_left + m_cmd_motor_speed_right) * encoder_wheel_radius / 2;
         angular_speed = (m_cmd_motor_speed_left - m_cmd_motor_speed_right) * encoder_wheel_radius / (2 * m_param_encoder_wheel_separation);
 
-        RCLCPP_INFO(m_logger, "Write > computed robot speeds [l=%.02f, a=%.02f]", linear_speed, angular_speed);
+        RCLCPP_DEBUG(m_logger, "Write > computed robot speeds [l=%.02f, a=%.02f]", linear_speed, angular_speed);
 
         // resultant speed after dapatation for motors placement
 
         m_motor_speed_left = (linear_speed + angular_speed * m_param_motor_wheel_separation) / motor_wheel_radius;
         m_motor_speed_right = (linear_speed - angular_speed * m_param_motor_wheel_separation) / motor_wheel_radius;
 
-        RCLCPP_INFO(m_logger, "Write > computed motor speeds [%.02f, %.02f]", m_motor_speed_left, m_motor_speed_right);
+        RCLCPP_DEBUG(m_logger, "Write > computed motor speeds [%.02f, %.02f]", m_motor_speed_left, m_motor_speed_right);
 
         if (m_param_invert_motor_left) m_motor_speed_left *= -1;
         if (m_param_invert_motor_right) m_motor_speed_right *= -1;
@@ -308,7 +308,7 @@ namespace robot_pkg
         
         if( send_motor_parameters() )
         {
-            RCLCPP_INFO(m_logger, "Written sucessfully");
+            RCLCPP_DEBUG(m_logger, "Written sucessfully");
             return hardware_interface::return_type::OK;
         }
         RCLCPP_WARN(m_logger, "Write error");
@@ -475,7 +475,7 @@ namespace robot_pkg
         hw_support_interfaces_pkg::msg::MotorsState motors_state
     )
     {
-        RCLCPP_INFO(m_logger, "receive motors state");
+        RCLCPP_DEBUG(m_logger, "receive motors state");
         m_real_enabled = motors_state.left_enable && motors_state.right_enable;
         m_motor_position_left = motor_compute_position(motors_state.left_position);
         m_motor_position_right = motor_compute_position(motors_state.right_position);
@@ -513,7 +513,7 @@ namespace robot_pkg
         }
 
 
-        RCLCPP_INFO(m_logger, "encoder positions received %.03f %.03f %d %d %f", m_encoder_position_left, m_encoder_position_right, encoders_state.left_raw, encoders_state.right_raw, ((double)(encoders_state.left_raw))*6.28318530718/4096.0);
+        RCLCPP_DEBUG(m_logger, "encoder positions received %.03f %.03f %d %d %f", m_encoder_position_left, m_encoder_position_right, encoders_state.left_raw, encoders_state.right_raw, ((double)(encoders_state.left_raw))*6.28318530718/4096.0);
     }
 
 

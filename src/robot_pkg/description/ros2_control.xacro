@@ -18,9 +18,9 @@
                 <param name="motors_acceleration">1600</param>
                 <param name="encoders_read_frequency">20.0</param>
                 <param name="encoder_wheel_diameter">0.0472</param>
-                <param name="encoder_wheel_separation">0.1425</param>
+                <param name="encoder_wheel_separation">0.1430</param>
                 <param name="motor_wheel_diameter">0.0472</param>
-                <param name="motor_wheel_separation">0.1135</param>
+                <param name="motor_wheel_separation">0.131</param>
             </hardware>
             <joint name="left_wheel_joint">
                 <command_interface name="velocity">
