@@ -1,0 +1,5 @@
+
+
+class LocalizationProcess:
+    pass
+

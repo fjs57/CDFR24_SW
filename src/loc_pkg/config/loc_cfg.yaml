@@ -1,0 +1,19 @@
+localization_node:
+  ros__parameters:
+    # low level filtering based on distance
+    scan_min_distance: 0.2 # minimum distance in meters
+    scan_max_distance: 3.8 # maxium distance in meters
+
+    # clustering 
+    clustering_epsilon: 0.1  # maximum distance between points to be considered as a cluster in meters
+    clustering_min_point_count: 3 # minimum (inclusive) number of points linked to consider a cluster
+
+    # cluster filter
+    cluster_filter_max_point_count: 25 # maximum points inside a cluster to be retained
+    cluster_filter_max_size: 0.3 # maximum size (full envelope) of a cluster to be retained in meters
+
+    # position_predictor
+    lidar_range_stddev: 2.0 # error on lidar position measure in meters for 1 sigma
+    lidar_angle_stddev: 0.017 # error on lidar position estimation in radians for 1 sigma
+    odom_distance_error: 1.5 # error on odometry position estimation linked to distance made (in meters or error per meters made)
+    odom_turn_error: 1.8 # error on odometry position estimation linked to turn made (in degrees/radians of error per degrees/radians turned)

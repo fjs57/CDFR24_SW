@@ -3,12 +3,8 @@
 
 
     <xacro:property name="motor_wheel_diameter" value="0.050"/>
-    <xacro:property name="motor_wheel_width" value="0.020"/>
-    <xacro:property name="motor_wheel_separation" value="0.114"/> <!--center to center-->
-
-    <xacro:property name="encoder_wheel_diameter" value="0.050"/>
-    <xacro:property name="encoder_wheel_width" value="0.005"/>
-    <xacro:property name="encoder_wheel_separation" value="0.142"/> <!--center to center-->
+    <xacro:property name="motor_wheel_width" value="0.005"/>
+    <xacro:property name="motor_wheel_separation" value="0.146"/> <!--center to center-->
 
     <xacro:property name="chassis_base_height" value="0.065"/>
     <xacro:property name="chassis_width" value="0.200"/>
@@ -122,50 +118,6 @@
             <mass value="0.1"/>
             <origin xyz="0.0 0.0 0.01" rpy="0.0 0.0 0.0"/>
             <inertia ixx="0.00007" ixy="0.0" ixz="0.0" iyy="0.00007" iyz="0.0" izz="0.00008"/>
-        </inertial>
-    </link>
-
-     <!-- ENCODER WHEELS -->
-
-    <joint name="encoder_left_wheel_joint" type="continuous">
-        <parent link="base_link"/>
-        <child link="encoder_left_wheel"/>
-        <origin xyz="0 ${encoder_wheel_separation/2} 0" rpy="-${pi/2} 0 0"/>
-        <axis xyz="0 0 1"/>
-    </joint>
-
-    <link name="encoder_left_wheel">
-        <visual>
-            <geometry>
-                <cylinder radius="${encoder_wheel_diameter/2}" length="${encoder_wheel_width/2}"/>
-            </geometry>
-            <material name="grey"/>
-        </visual>
-        <inertial>
-            <mass value="0.01"/>
-            <origin xyz="0.0 0.0 0.01" rpy="0.0 0.0 0.0"/>
-            <inertia ixx="0.000007" ixy="0.0" ixz="0.0" iyy="0.000007" iyz="0.0" izz="0.000008"/>
-        </inertial>
-    </link>
-
-    <joint name="encoder_right_wheel_joint" type="continuous">
-        <parent link="base_link"/>
-        <child link="encoder_right_wheel"/>
-        <origin xyz="0 -${encoder_wheel_separation/2} 0" rpy="${pi/2} 0 0"/>
-        <axis xyz="0 0 -1"/>
-    </joint>
-
-    <link name="encoder_right_wheel">
-        <visual>
-            <geometry>
-                <cylinder radius="${encoder_wheel_diameter/2}" length="${encoder_wheel_width/2}"/>
-            </geometry>
-            <material name="grey"/>
-        </visual>
-        <inertial>
-            <mass value="0.01"/>
-            <origin xyz="0.0 0.0 0.01" rpy="0.0 0.0 0.0"/>
-            <inertia ixx="0.000007" ixy="0.0" ixz="0.0" iyy="0.000007" iyz="0.0" izz="0.000008"/>
         </inertial>
     </link>
 

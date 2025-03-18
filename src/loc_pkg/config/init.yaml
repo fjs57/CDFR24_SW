@@ -1,0 +1,5 @@
+localization_node:
+  ros__parameters:
+    init_x: 0.0
+    init_y: 0.0
+    init_th: 0.0

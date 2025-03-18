@@ -49,7 +49,6 @@ def generate_launch_description():
         }.items()
     )
 
-    # Run the spawner node from the gazebo_ros package. The entity name doesn't really matter if you only have a single robot.
     spawn_entity = Node(
         package='gazebo_ros', executable='spawn_entity.py',
         arguments=['-topic', 'robot_description','-entity', 'robot'],
@@ -69,31 +68,19 @@ def generate_launch_description():
         arguments=["joint_broad"],
     )
 
+    lidar_localization_node = Node(
+        package='test_odom_pkg',
+        executable='clustering_process'
+    )
 
-    # Code for delaying a node (I haven't tested how effective it is)
-    # 
-    # First add the below lines to imports
-    # from launch.actions import RegisterEventHandler
-    # from launch.event_handlers import OnProcessExit
-    #
-    # Then add the following below the current diff_drive_spawner
-    # delayed_diff_drive_spawner = RegisterEventHandler(
-    #     event_handler=OnProcessExit(
-    #         target_action=spawn_entity,
-    #         on_exit=[diff_drive_spawner],
-    #     )
-    # )
-    #
-    # Replace the diff_drive_spawner in the final return with delayed_diff_drive_spawner
-
-    # robot_localization_file_path = os.path.join(get_package_share_directory("test_odom_pkg"),'config','ekf.yaml')
-    # start_robot_localization_cmd = Node(
-    #     package='robot_localization',
-    #     executable='ekf_node',
-    #     name='ekf_filter_node',
-    #     output='screen',
-    #     parameters=[robot_localization_file_path, {'use_sim_time': True}]
-    # )
+    robot_localization_file_path = os.path.join(get_package_share_directory("test_odom_pkg"),'config','ekf.yaml')
+    start_robot_localization_cmd = Node(
+        package='robot_localization',
+        executable='ekf_node',
+        name='ekf_filter_node',
+        output='screen',
+        parameters=[robot_localization_file_path, {'use_sim_time': True}]
+    )
 
 
 
@@ -106,5 +93,6 @@ def generate_launch_description():
         spawn_entity,
         diff_drive_spawner,
         joint_broad_spawner,
-        # start_robot_localization_cmd
+        # lidar_localization_node,
+        start_robot_localization_cmd
     ])
